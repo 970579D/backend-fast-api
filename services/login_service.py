@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy.orm import Session
 
 from models.login_model import Login
@@ -39,6 +41,7 @@ class LoginService:
 
         login_data: Login = Login(
             username=login_request["username"],
+            session=self.generate_session_id()
         )
 
         result: User = self.repository.create_login(db, login_data)
@@ -48,3 +51,26 @@ class LoginService:
             response.data = result
 
         return response 
+
+
+    def logout(self, db: Session, session: str) -> Response_Model[Login]:
+        response: Response_Model = Response_Model(status="success", message="Logout successful")
+
+        existing_login = self.repository.find_login_by_session(db, session)
+        if not existing_login:
+            response.status = "error"
+            response.message = "Login does not exist"
+            return response 
+
+        result: bool = self.repository.logout(db, session)
+        if result:
+            response.status = "success"
+            response.message = "Logout successful"
+        else:
+            response.status = "error"
+            response.message = "Logout failed"
+
+        return response
+
+    def generate_session_id(self) -> str:
+        return str(uuid.uuid4())

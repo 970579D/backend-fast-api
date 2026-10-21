@@ -19,3 +19,7 @@ def find_login(username: str, db: Session = Depends(get_db)):
 @router.post("/")
 def create(user: dict, db: Session = Depends(get_db)):
     return login_service.create_login(db, user)
+
+@router.put("/logout")
+def logout(session: str, db: Session = Depends(get_db)):
+    return login_service.logout(db, session)

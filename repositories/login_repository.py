@@ -1,4 +1,6 @@
-from sqlalchemy import select
+from ast import stmt
+
+from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
 from models.login_model import Login
@@ -16,20 +18,35 @@ class LoginRepository:
 
     def find_login(self, db: Session, username: str) -> Login:
         # logout is null
-        login: Login = list(
+        result: Login = list(
             db.scalars(select(Login).where(Login.username == username).where(Login.logout_date.is_(None)))
         )
-        return login
+        return result
+
+    def find_login_by_session(self, db: Session, session: dict) -> Login:
+        result: Login = list(
+            db.scalars(select(Login).where(Login.session == session).where(Login.logout_date.is_(None)))
+        )
+        return result
 
     def create_login(
         self,
         db: Session,
         login: Login,
     ) -> Login:
-        input_login = Login(username=login.username)
+        input_login = Login(username=login.username, session=login.session)
         db.add(input_login)
         db.commit()
         db.refresh(input_login)
         selected_login = self.find_login(db, login.username)
         return selected_login
-    
+
+    def logout(self, db: Session, session: str) -> bool:
+        result = db.execute(
+            update(Login)
+            .where(Login.session == session)
+            .where(Login.logout_date.is_(None))
+            .values(logout_date=func.now())
+        )
+        db.commit()
+        return result.rowcount > 0

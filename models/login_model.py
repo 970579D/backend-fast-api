@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from pydantic import BaseModel
-from sqlalchemy import BigInteger, Column, String, DateTime, text
+from sqlalchemy import BigInteger, Column, String, DateTime, Uuid, text
 from sqlalchemy.orm import Mapped
 
 from database import Base
@@ -18,6 +18,12 @@ class Login(Base):
 
     username: Mapped[str] = Column(
         String(50),
+        nullable=False,
+        unique=True,
+    )
+
+    session: Mapped[str] = Column(
+        Uuid(50),
         nullable=False,
         unique=True,
     )
