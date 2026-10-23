@@ -4,8 +4,6 @@ from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
 from models.score_model import Score
-from models.response_model import Response_Model
-from models.user_model import User
 
 class ScoreRepository:
 
@@ -23,15 +21,12 @@ class ScoreRepository:
             db.refresh(score)
 
         return True
-        # selected_score = self.find_score(db, score.username)
-        # return selected_score
 
-    def update_score(self, db: Session, session: str) -> bool:
+    def update_score(self, db: Session, username: Score) -> bool:
         result = db.execute(
             update(Score)
-            .where(Score.session == session)
-            .where(Score.logout_date.is_(None))
-            .values(logout_date=func.now())
+            .where(Score.username == username)
+            .values(score=username["score"])
         )
         db.commit()
         return result.rowcount > 0

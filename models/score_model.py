@@ -23,13 +23,13 @@ class Score(Base):
 
     activity: Mapped[str] = Column(
         String(50),
-        nullable=False,
+        nullable=True,
         unique=True,
     )
     
     score: Mapped[str] = Column(
         BigInteger,
-        nullable=False,
+        nullable=True,
         unique=True,
     )
     
@@ -45,3 +45,6 @@ class Score(Base):
         server_default=text("CURRENT_TIMESTAMP"),
     )
 
+class ScoreRequest(BaseModel):
+    username: str
+    score: str

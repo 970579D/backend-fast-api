@@ -7,7 +7,6 @@ from models.user_model import User
 class UserRepository:
 
     def get_all_user(self, db: Session) -> Response_Model[list[User]]:
-       response: Response_Model = Response_Model(status="success", message="User created successfully")
        users: list[User] = list(
                    db.scalars(select(User)).all()
                )
@@ -15,7 +14,6 @@ class UserRepository:
     )
 
     def find_user(self, db: Session, user: User, isPassword: bool) -> User:
-        
         user: User | None = db.scalars(select(User).where(
         User.username == user["username"],
         User.password == user["password"]
@@ -32,8 +30,7 @@ class UserRepository:
         user: User,
         is_commit: bool
     ) -> bool:
-        print("user")
-        print(user)
+        
         db.add(user)
 
         if is_commit:
