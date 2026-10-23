@@ -2,13 +2,15 @@ from sqlalchemy.orm import Session
 
 from models.response_model import Response_Model
 from models.user_model import User
+from models.score_model import Score
 from repositories.user_repository import UserRepository
-
+from repositories.score_repository import ScoreRepository
 
 class UserService:
 
     def __init__(self):
         self.repository = UserRepository()
+        self.scoreRepository = ScoreRepository();
 
     def get_all_users(self, db: Session) -> Response_Model[list[User]]:
         return self.repository.get_all_user(db)
@@ -25,9 +27,25 @@ class UserService:
             response.message = "User already exists"
             return response
 
-        result: User = self.repository.create(db, user)
+        flag: bool = False
+        result: User = None
+        try:
+            input_user = User(username = user["username"], password = user["password"])
+            # input_score = Score(username=user.username)
 
-        if result:
+            self.repository.create(db, input_user, False)
+            # self.scoreRepository.create(db, input_score, False)
+            
+            db.commit()
+            db.refresh(input_user) #add database model, use shortcut
+            # db.refresh(input_score)
+            # result = self.repository.find_user(db, user, False)
+            flag = True
+        except: 
+            db.rollback()
+        
+
+        if flag:
             response.status = "success"
             response.message = "User created successfully"
             response.data = result

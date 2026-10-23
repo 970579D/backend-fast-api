@@ -30,14 +30,14 @@ class UserRepository:
         self,
         db: Session,
         user: User,
-    ) -> User:
+        is_commit: bool
+    ) -> bool:
+        print("user")
+        print(user)
+        db.add(user)
 
-        input_user = User(username = user["username"], password = user["password"])
-
-        db.add(input_user)
-        db.commit()
-        db.refresh(input_user)
-
-        selected_user = self.find_user(db, user, isPassword=False)
-        return selected_user
+        if is_commit:
+            db.commit()
+            db.refresh(user)
+        return True
     
