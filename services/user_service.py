@@ -19,7 +19,7 @@ class UserService:
         return self.repository.find_user(db, username)
 
     def create(self, db: Session, user: User) -> Response_Model[User]:
-        response: Response_Model = Response_Model(status="success", message="Login created successfully")
+        response: Response_Model = Response_Model(status="success", message="User created successfully")
 
         existing_user = self.repository.find_user(db, user, isPassword=False)
         if existing_user:
@@ -31,13 +31,13 @@ class UserService:
         result: User = None
         try:
             input_user = User(username = user["username"], password = user["password"])
-            input_score = Score(username=user["username"], score = 0)
+            input_score = Score(username = user["username"], score = 0)
 
             self.repository.create(db, input_user, False)
             self.scoreRepository.create(db, input_score, False)
             
             db.commit()
-            db.refresh(input_user)#use shortcut
+            db.refresh(input_user) #use shortcut
             db.refresh(input_score)
             flag = True
         except: 
@@ -45,8 +45,6 @@ class UserService:
         
 
         if flag:
-            response.status = "success"
-            response.message = "User created successfully"
             response.data = result
         else:
             response.status = "error"

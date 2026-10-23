@@ -12,6 +12,6 @@ score_service = ScoreService()
 def create(score: dict, db: Session = Depends(get_db)):
     return score_service.create(db, score)
 
-# @router.put("/logout")
-# def logout(session: str, db: Session = Depends(get_db)):
-#     return login_service.logout(db, session)
+@router.put("/logout")
+def logout(session: str, db: Session = Depends(get_db)):
+    return score_service.update(db, session)

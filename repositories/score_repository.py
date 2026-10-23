@@ -1,6 +1,6 @@
 from ast import stmt
 
-from sqlalchemy import func, select, update
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from models.score_model import Score

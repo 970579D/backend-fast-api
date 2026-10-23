@@ -12,27 +12,22 @@ class ScoreService:
 
 
     def create(self, db: Session, score: Score) -> Response_Model[Score]:
-        response: Response_Model = Response_Model(status="success", message="Login created successfully")
+        response: Response_Model = Response_Model(status="success", message="Score created successfully")
 
         flag: bool = False
         result: Score = None
         try:
-            print("log")
-            print(score)
             input_score = Score(username = score["username"], score = score["score"])
-
             self.repository.create(db, input_score, False)
             
             db.commit()
-            db.refresh(input_score) #add database model, use shortcut
+            db.refresh(input_score)
             flag = True
         except: 
             db.rollback()
 
         
         if flag:
-            response.status = "success"
-            response.message = "Score created successfully"
             response.data = result
         else:
             response.status = "error"
@@ -40,4 +35,21 @@ class ScoreService:
         
         return response
     
-    
+
+    def update(self, db: Session, session: str) -> Response_Model[Score]:
+        response: Response_Model = Response_Model(status="success", message="Score update successful")
+
+        # existing_login = self.repository.find_login_by_session(db, session)
+        # if not existing_login:
+        #     response.status = "error"
+        #     response.message = "Login session does not exist"
+        #     return response 
+
+        # result: bool = self.repository.update_score(db, session)
+        # if result:
+            
+        # else:
+        #     response.status = "error"
+        #     response.message = "Logout failed"
+
+        return response
