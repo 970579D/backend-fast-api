@@ -8,6 +8,7 @@ from models.user_model import User, UserRequest
 from repositories.login_repository import LoginRepository
 from repositories.user_repository import UserRepository
 
+
 class LoginService:
 
     def __init__(self):
@@ -59,7 +60,7 @@ class LoginService:
         existing_login = self.repository.find_login_by_session(db, session)
         if not existing_login:
             response.status = "error"
-            response.message = "Login does not exist"
+            response.message = "Login session does not exist"
             return response 
 
         result: bool = self.repository.logout(db, session)
