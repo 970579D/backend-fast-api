@@ -3,4 +3,5 @@ ERROR = "error"
 
 
 LOGIN = "Login"
-Logout = "Logout"
+LOGOUT = "Logout"
+SCORE = "Score"

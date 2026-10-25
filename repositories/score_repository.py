@@ -22,11 +22,11 @@ class ScoreRepository:
 
         return True
 
-    def update_score(self, db: Session, username: Score) -> bool:
+    def update(self, db: Session, score: dict) -> bool:
         result = db.execute(
             update(Score)
-            .where(Score.username == username)
-            .values(score=username["score"])
+            .where(Score.username == score["username"])
+            .values(score=score["score"])
         )
         db.commit()
         return result.rowcount > 0

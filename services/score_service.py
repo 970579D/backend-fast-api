@@ -4,6 +4,7 @@ from models.response_model import Response_Model
 from models.score_model import Score
 from models.score_model import Score
 from repositories.score_repository import ScoreRepository
+from utils import constants, utils
 
 class ScoreService:
 
@@ -12,7 +13,7 @@ class ScoreService:
 
 
     def create(self, db: Session, score: Score) -> Response_Model[Score]:
-        response: Response_Model = Response_Model(status="success", message="Score created successfully")
+        response: Response_Model = Response_Model(status="success", message=utils.res_status_msg(constants.SCORE, constants.SUCCESS))
 
         flag: bool = False
         result: Score = None
@@ -36,20 +37,12 @@ class ScoreService:
         return response
     
 
-    def update(self, db: Session, session: str) -> Response_Model[Score]:
-        response: Response_Model = Response_Model(status="success", message="Score update successful")
+    def update(self, db: Session, score: dict) -> Response_Model[Score]:
+        res: Response_Model = Response_Model(status="success", message=utils.res_status_msg(constants.SCORE, constants.SUCCESS))
 
-        # existing_login = self.repository.find_login_by_session(db, session)
-        # if not existing_login:
-        #     response.status = "error"
-        #     response.message = "Login session does not exist"
-        #     return response 
+        result: bool = self.repository.update(db, score)
+        if result == False:
+            res.status = constants.ERROR
+            res.message = utils.res_status_msg(constants.Logout, constants.ERROR)
 
-        # result: bool = self.repository.update_score(db, session)
-        # if result:
-            
-        # else:
-        #     response.status = "error"
-        #     response.message = "Logout failed"
-
-        return response
+        return res
