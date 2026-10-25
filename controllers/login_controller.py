@@ -21,5 +21,5 @@ def create(user: dict, db: Session = Depends(get_db)):
     return login_service.create_login(db, user)
 
 @router.put("/logout")
-def logout(session: str, db: Session = Depends(get_db)):
-    return login_service.logout(db, session)
+def logout(logout: dict, db: Session = Depends(get_db)):
+    return login_service.logout(db, logout)

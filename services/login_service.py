@@ -53,17 +53,16 @@ class LoginService:
         return res 
 
 
-    def logout(self, db: Session, session: str) -> Response_Model[Login]:
+    def logout(self, db: Session, logout: dict) -> Response_Model[Login]:
         res: Response_Model = Response_Model(status=constants.SUCCESS, 
                                                   message=utils.res_status_msg(constants.LOGOUT, constants.SUCCESS))
-
-        find_login = self.repository.find_login_by_session(db, session)
+        find_login = self.repository.find_login_by_session(db, logout["session"])
         if not find_login:
             res.status = constants.ERROR
             res.message =  utils.res_status_msg(constants.LOGOUT, constants.ERROR, "Login session does not exist")
             return res 
 
-        result: bool = self.repository.logout(db, session)
+        result: bool = self.repository.logout(db, logout["session"])
         if result == False:
             res.status = constants.ERROR
             res.message = utils.res_status_msg(constants.LOGOUT, constants.ERROR)

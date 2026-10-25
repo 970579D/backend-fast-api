@@ -11,9 +11,8 @@ class ScoreService:
     def __init__(self):
         self.repository = ScoreRepository()
 
-
     def create(self, db: Session, score: Score) -> Response_Model[Score]:
-        response: Response_Model = Response_Model(status="success", message=utils.res_status_msg(constants.SCORE, constants.SUCCESS))
+        res: Response_Model = Response_Model(status="success", message=utils.res_status_msg(constants.SCORE, constants.SUCCESS))
 
         flag: bool = False
         result: Score = None
@@ -27,14 +26,13 @@ class ScoreService:
         except: 
             db.rollback()
 
-        
         if flag:
-            response.data = result
+            res.data = result
         else:
-            response.status = "error"
-            response.message = "Failed to create score"
+            res.status = constants.ERROR
+            res.message = utils.res_status_msg(constants.Logout, constants.ERROR)
         
-        return response
+        return res
     
 
     def update(self, db: Session, score: dict) -> Response_Model[Score]:

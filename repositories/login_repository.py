@@ -23,7 +23,7 @@ class LoginRepository:
         )
         return result
 
-    def find_login_by_session(self, db: Session, session: dict) -> Login:
+    def find_login_by_session(self, db: Session, session: str) -> Login:
         result: Login = list(
             db.scalars(select(Login).where(Login.session == session).where(Login.logout_date.is_(None)))
         )

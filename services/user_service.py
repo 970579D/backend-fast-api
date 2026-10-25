@@ -29,22 +29,25 @@ class UserService:
 
         flag: bool = False
         result: User = None
-        try:
-            input_user = User(username = user["username"], password = user["password"])
-            input_score = Score(username = user["username"], score = 0)
 
+        input_user = User(username = user["username"], password = user["password"])
+        input_score = Score(username = user["username"], score = 0)
+        
+        try:
+            
             self.repository.create(db, input_user, False)
             self.scoreRepository.create(db, input_score, False)
-            
+
             db.commit()
-            db.refresh(input_user) #use shortcut
+            db.refresh(input_user)
             db.refresh(input_score)
+
             flag = True
         except: 
             db.rollback()
-        
 
         if flag:
+            result = self.repository.find_user(db, user, False)
             response.data = result
         else:
             response.status = "error"

@@ -22,7 +22,7 @@ class ScoreRepository:
 
         return True
 
-    def update(self, db: Session, score: dict) -> bool:
+    def update(self, db: Session, score: Score) -> bool:
         result = db.execute(
             update(Score)
             .where(Score.username == score["username"])
