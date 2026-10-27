@@ -26,6 +26,12 @@ class Score(Base):
         nullable=True,
         unique=True,
     )
+
+    round: Mapped[str] = Column(
+        BigInteger,
+        nullable=True,
+        unique=True,
+    )
     
     score: Mapped[str] = Column(
         BigInteger,

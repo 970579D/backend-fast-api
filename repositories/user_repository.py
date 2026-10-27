@@ -28,13 +28,11 @@ class UserRepository:
         self,
         db: Session,
         user: User,
-        is_commit: bool
     ) -> bool:
         
         db.add(user)
+        db.commit()
+        db.refresh(user)
 
-        if is_commit:
-            db.commit()
-            db.refresh(user)
         return True
     

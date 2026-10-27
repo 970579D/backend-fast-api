@@ -14,24 +14,16 @@ class ScoreService:
     def create(self, db: Session, score: Score) -> Response_Model[Score]:
         res: Response_Model = Response_Model(status="success", message=utils.res_status_msg(constants.SCORE, constants.SUCCESS))
 
-        flag: bool = False
-        result: Score = None
-        try:
-            input_score = Score(username = score["username"], score = score["score"])
-            self.repository.create(db, input_score, False)
-            
-            db.commit()
-            db.refresh(input_score)
-            flag = True
-        except: 
-            db.rollback()
-
-        if flag:
-            res.data = result
+        last_round: Score = self.repository.find_last_round(db,  score["username"])
+        round: int
+        if last_round:
+            round = last_round.round + 1
         else:
-            res.status = constants.ERROR
-            res.message = utils.res_status_msg(constants.Logout, constants.ERROR)
+            round = 1
         
+        input_score = Score(username = score["username"], score = score["score"], round = round)
+        self.repository.create(db, input_score)
+
         return res
     
 

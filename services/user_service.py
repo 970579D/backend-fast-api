@@ -27,30 +27,35 @@ class UserService:
             response.message = "User already exists"
             return response
 
-        flag: bool = False
+        # flag: bool = False
         result: User = None
 
         input_user = User(username = user["username"], password = user["password"])
-        input_score = Score(username = user["username"], score = 0)
+        # input_score = Score(username = user["username"], score = 0)
         
-        try:
+        # try:
             
-            self.repository.create(db, input_user, False)
-            self.scoreRepository.create(db, input_score, False)
+            # self.repository.create(db, input_user, True)
+            # self.scoreRepository.create(db, input_score, False)
 
-            db.commit()
-            db.refresh(input_user)
-            db.refresh(input_score)
+            # db.commit()
+            # db.refresh(input_user)
+            # db.refresh(input_score)
 
-            flag = True
-        except: 
-            db.rollback()
+            # flag = True
+        # except: 
+            # db.rollback()
 
-        if flag:
-            result = self.repository.find_user(db, user, False)
-            response.data = result
-        else:
-            response.status = "error"
-            response.message = "Failed to create user"
+        # if flag:
+        #     result = self.repository.find_user(db, user, False)
+        #     response.data = result
+        # else:
+        #     response.status = "error"
+        #     response.message = "Failed to create user"
+
+        self.repository.create(db, input_user)
+        result = self.repository.find_user(db, user, False)
+
+        response.data = result
         
         return response
